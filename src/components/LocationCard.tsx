@@ -43,9 +43,9 @@ export const LocationCard: React.FC<LocationCardProps> = ({
   return (
     <>
       {/* 1. TOP SELECT LOCATION CARD */}
-      <div className="relative overflow-hidden rounded-2xl border-2 border-sand-300 bg-ivory-50 shadow-warm-xs transition-all hover:border-sand-400">
-        {/* Subtle Map Graphic Background (Grayscale map roads like reference app) */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none" aria-hidden="true">
+      <div className="relative overflow-hidden rounded-3xl border border-sand-300 bg-white shadow-warm-xs transition-all hover:border-sand-400">
+        {/* Subtle Map Graphic Background */}
+        <div className="absolute inset-0 opacity-15 pointer-events-none" aria-hidden="true">
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 400 120">
             <path d="M-20,40 Q80,20 180,60 T380,30 T440,70" fill="none" stroke="#1A2D57" strokeWidth="6" />
             <path d="M40,-10 L80,130 M220,-10 L190,130 M310,-10 L340,130" fill="none" stroke="#1A2D57" strokeWidth="4" />
@@ -56,28 +56,28 @@ export const LocationCard: React.FC<LocationCardProps> = ({
         </div>
 
         {/* Card Content */}
-        <div className="relative p-3.5 sm:p-4 flex items-center justify-between gap-3">
+        <div className="relative p-4 sm:p-5 flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-3 text-left flex-1 min-w-0 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-terracotta-500 rounded-lg p-1 -m-1"
+            className="flex items-center gap-3.5 text-left flex-1 min-w-0 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-navy-600 rounded-xl p-1 -m-1"
           >
-            <div className="w-10 h-10 rounded-xl bg-terracotta-500/15 border border-terracotta-300 text-terracotta-700 flex items-center justify-center shrink-0">
-              <MapPin className="w-5 h-5 text-terracotta-600 fill-terracotta-500/30" />
+            <div className="w-11 h-11 rounded-2xl bg-sand-200 border border-sand-300 text-navy-900 flex items-center justify-center shrink-0 shadow-xs">
+              <MapPin className="w-5 h-5 text-navy-800" />
             </div>
 
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-terracotta-700">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-navy-800">
                   {currentLanguage === 'hi' ? 'आपकी लोकेशन' : currentLanguage === 'mr' ? 'तुमची जागा' : 'Current Location'}
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" title="Live Naka GPS Active" />
               </div>
-              <h3 className="font-extrabold text-sm sm:text-base text-deepgreen-900 truncate flex items-center gap-1">
+              <h3 className="font-extrabold text-base sm:text-lg text-navy-900 truncate flex items-center gap-1">
                 <span>{displayLocation}</span>
-                <ChevronDown className="w-4 h-4 text-nearblack-subtle shrink-0" />
+                <ChevronDown className="w-4 h-4 text-navy-800 shrink-0" />
               </h3>
-              <p className="text-[11px] text-nearblack-subtle truncate">
+              <p className="text-xs text-nearblack-subtle truncate mt-0.5">
                 {landmark}
               </p>
             </div>
@@ -86,7 +86,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="touch-target px-3 py-1.5 rounded-xl bg-sand-200 hover:bg-sand-300 text-deepgreen-900 border border-sand-300 text-xs font-bold shrink-0 transition-colors"
+            className="touch-target px-3.5 py-2 rounded-xl bg-sand-200 hover:bg-sand-300 text-navy-900 border border-sand-300 text-xs font-bold shrink-0 transition-colors shadow-xs"
           >
             {currentLanguage === 'hi' ? 'बदलें' : currentLanguage === 'mr' ? 'बदला' : 'Change'}
           </button>

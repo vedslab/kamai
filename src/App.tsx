@@ -43,6 +43,8 @@ import { LandingPage } from './components/LandingPage';
 import { SunkeSamjhoButton } from './components/SunkeSamjhoButton';
 import { LocationCard } from './components/LocationCard';
 import { HomeQuickCards } from './components/HomeQuickCards';
+import { HomePromoBanners } from './components/HomePromoBanners';
+import { HomeTrustAndReferral } from './components/HomeTrustAndReferral';
 import { WorkFiltersTab, TimeFilter, DateFilter } from './components/WorkFiltersTab';
 import { TradeIcon } from './components/TradeIcon';
 import {
@@ -446,7 +448,7 @@ export const App: React.FC = () => {
         {/* VIEW 0: HOME PAGE (Location Card -> Explore & Pehchaan Cards -> Filters Card -> Job Profiles Grid) */}
         {activeTab === 'home' && (
           <div className="space-y-4 sm:space-y-5 animate-in fade-in">
-            {/* CARD 1: SELECT LOCATION CARD (Showing current location) */}
+            {/* 1. SELECT LOCATION CARD (Showing current location / live naka point) */}
             <LocationCard
               selectedAreaId={selectedAreaId}
               onSelectArea={(areaId) => {
@@ -456,7 +458,7 @@ export const App: React.FC = () => {
               currentLanguage={currentLanguage}
             />
 
-            {/* CARD 2: TWO HALF-SIDE CARDS (Explore Work on Left + Pehchaan Card on Right) */}
+            {/* 2. DUAL ACTION CARDS (Schedule/Explore Work & Instant/Pehchaan Card from Reference) */}
             <HomeQuickCards
               jobCount={filteredJobs.length}
               onExploreClick={() => setActiveTab('work')}
@@ -464,26 +466,44 @@ export const App: React.FC = () => {
               currentLanguage={currentLanguage}
             />
 
-            {/* VARIOUS JOB PROFILES (From Trades Page) */}
+            {/* 3. PROMO STRIP & WAGE VOUCHER CARD (Introducing favorite & pass style from Reference) */}
+            <HomePromoBanners
+              onOpenPehlePakka={() => setActiveTab('pehle_pakka')}
+              onExploreWork={() => setActiveTab('work')}
+              currentLanguage={currentLanguage}
+            />
+
+            {/* 4. "ONE EXPERT WHO CAN DO IT ALL" - TRADES & PROFILES GRID */}
             <div className="space-y-3 pt-1">
               <div className="flex items-center justify-between px-1">
                 <div>
-                  <h3 className="text-sm sm:text-base font-extrabold text-deepgreen-900 font-hindi flex items-center gap-2">
-                    <Wrench className="w-4 h-4 text-terracotta-600" />
-                    <span>{currentLanguage === 'hi' ? 'काम के प्रकार व हुनर (Job Profiles)' : currentLanguage === 'mr' ? 'कामाचे प्रकार व कौशल्ये (Job Profiles)' : 'Job Profiles & Trades'}</span>
+                  <h3 className="text-base sm:text-lg font-black text-navy-900 font-hindi flex items-center gap-2">
+                    <Wrench className="w-4 h-4 text-navy-800" />
+                    <span>
+                      {currentLanguage === 'hi'
+                        ? 'सभी कामगार व हुनर (Profiles)'
+                        : currentLanguage === 'mr'
+                        ? 'सर्व कामगार व कौशल्ये'
+                        : 'One Expert who can do it all'}
+                    </span>
                   </h3>
-                  <p className="text-[11px] text-nearblack-subtle">
-                    {currentLanguage === 'hi' ? 'अपना हुनर चुनें और तुरंत उस काम की सूचियां देखें' : currentLanguage === 'mr' ? 'आपले कौशल्य निवडा आणि थेट काम शोधा' : 'Choose your trade to see matching work'}
+                  <p className="text-xs text-nearblack-subtle">
+                    {currentLanguage === 'hi'
+                      ? 'अपना हुनर चुनें और तुरंत नाके के काम देखें'
+                      : currentLanguage === 'mr'
+                      ? 'आपले कौशल्य निवडा आणि थेट काम शोधा'
+                      : 'Choose your trade to see instant work listings'}
                   </p>
                 </div>
-                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-sand-200 text-deepgreen-900">
+                <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-sand-200 text-navy-900 border border-sand-300">
                   {TRADES.length} {currentLanguage === 'hi' ? 'हुनर' : currentLanguage === 'mr' ? 'कौशल्ये' : 'Profiles'}
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+              {/* Modern 3-4 column square-rounded cards (matching the reference photo grid) */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-3.5">
                 {TRADES.map((trade) => {
-                  const jobCountForTrade = jobs.filter(j => j.tradeId === trade.id).length;
+                  const jobCountForTrade = jobs.filter((j) => j.tradeId === trade.id).length;
                   return (
                     <button
                       key={trade.id}
@@ -492,22 +512,22 @@ export const App: React.FC = () => {
                         setSelectedTradeId(trade.id);
                         setActiveTab('work');
                       }}
-                      className="p-3 sm:p-3.5 rounded-xl bg-ivory-50 border border-sand-300 hover:border-terracotta-500 hover:shadow-warm-sm text-left transition-all group flex flex-col justify-between gap-2.5 touch-target"
+                      className="p-3.5 sm:p-4 rounded-3xl bg-white border border-sand-300 hover:border-navy-700 hover:shadow-warm text-left transition-all group flex flex-col justify-between gap-3 touch-target"
                     >
                       <div className="flex items-start justify-between gap-1.5">
-                        <div className="w-9 h-9 rounded-lg bg-sand-200 text-deepgreen-900 group-hover:bg-terracotta-50 group-hover:text-terracotta-600 flex items-center justify-center transition-colors">
-                          <TradeIcon iconName={trade.iconName} className="w-5 h-5" />
+                        <div className="w-11 h-11 rounded-2xl bg-sand-200 text-navy-900 group-hover:bg-sand-300 flex items-center justify-center transition-colors shadow-xs">
+                          <TradeIcon iconName={trade.iconName} className="w-5 h-5 text-navy-800" />
                         </div>
-                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-sand-200 text-deepgreen-900">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sand-100 text-navy-900 border border-sand-200">
                           {jobCountForTrade} {currentLanguage === 'hi' ? 'कामे' : currentLanguage === 'mr' ? 'कामे' : 'jobs'}
                         </span>
                       </div>
 
                       <div>
-                        <h4 className="font-bold text-xs sm:text-sm text-deepgreen-900 group-hover:text-terracotta-600 font-hindi truncate">
+                        <h4 className="font-extrabold text-xs sm:text-sm text-navy-900 group-hover:text-navy-700 font-hindi truncate">
                           {trade.name[currentLanguage] || trade.name.en}
                         </h4>
-                        <p className="text-[10px] text-terracotta-700 font-semibold mt-0.5">
+                        <p className="text-[11px] text-navy-800 font-bold mt-1">
                           ₹{trade.avgDailyRate.min}–₹{trade.avgDailyRate.max}/दिन
                         </p>
                       </div>
@@ -516,6 +536,9 @@ export const App: React.FC = () => {
                 })}
               </div>
             </div>
+
+            {/* 5. EXPERTS VETTED FOR QUALITY / TRUST SEAL & REFERRAL (from Reference Image 2) */}
+            <HomeTrustAndReferral currentLanguage={currentLanguage} />
           </div>
         )}
 
