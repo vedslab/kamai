@@ -81,17 +81,17 @@ export const SunkeSamjhoButton: React.FC<SunkeSamjhoButtonProps> = ({
           onClick={handleToggle}
           aria-pressed={isPlaying}
           aria-label={isPlaying ? stopLabel : defaultLabel}
-          title={isPlaying ? stopLabel : defaultLabel}
+          title={isPlaying ? stopLabel : `${defaultLabel} (Voice Assist)`}
           className={`touch-target rounded-full p-2.5 transition-all focus-visible:ring-2 focus-visible:ring-terracotta-500 ${
             isPlaying
-              ? 'bg-terracotta-500 text-ivory-50 ring-2 ring-terracotta-300 shadow-warm'
-              : 'bg-sand-200/80 hover:bg-sand-300 text-deepgreen-900 border border-sand-400/50'
+              ? 'bg-terracotta-500 text-white ring-2 ring-terracotta-300 shadow-warm animate-pulse'
+              : 'bg-sand-200/90 hover:bg-sand-300 text-deepgreen-900 border border-sand-400/50'
           } ${className}`}
         >
           {isPlaying ? (
             <Square className="w-4 h-4 fill-current" />
           ) : (
-            <Volume2 className="w-4 h-4" />
+            <Volume2 className="w-4 h-4 text-terracotta-600" />
           )}
         </button>
       ) : (
@@ -99,21 +99,25 @@ export const SunkeSamjhoButton: React.FC<SunkeSamjhoButtonProps> = ({
           type="button"
           onClick={handleToggle}
           aria-pressed={isPlaying}
-          className={`touch-target inline-flex items-center gap-2 px-3 py-2 rounded-lg font-medium text-xs md:text-sm transition-all border ${
+          title={isPlaying ? stopLabel : `${label || defaultLabel} (Voice Assist)`}
+          className={`touch-target inline-flex items-center gap-2 px-3 py-2 rounded-xl font-bold text-xs md:text-sm transition-all border ${
             isPlaying
-              ? 'bg-terracotta-500 text-ivory-50 border-terracotta-600 shadow-warm'
-              : 'bg-sand-100 hover:bg-sand-200 text-nearblack border-sand-300'
+              ? 'bg-terracotta-500 text-white border-terracotta-600 shadow-warm'
+              : 'bg-sand-100 hover:bg-sand-200 text-deepgreen-900 border-sand-300'
           } ${className}`}
         >
           {isPlaying ? (
             <>
               <Square className="w-4 h-4 fill-current text-ivory-100" />
               <span>{stopLabel}</span>
-              <span className="inline-block w-2 h-2 rounded-full bg-ivory-50 ml-1" />
+              <span className="relative flex h-2 w-2 ml-1">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+              </span>
             </>
           ) : (
             <>
-              <Volume2 className="w-4 h-4 text-terracotta-500" />
+              <Volume2 className="w-4 h-4 text-terracotta-600" />
               <span>{label || defaultLabel}</span>
             </>
           )}

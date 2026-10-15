@@ -47,6 +47,7 @@ import { HomePromoBanners } from './components/HomePromoBanners';
 import { HomeTrustAndReferral } from './components/HomeTrustAndReferral';
 import { WorkFiltersTab, TimeFilter, DateFilter } from './components/WorkFiltersTab';
 import { TradeIcon } from './components/TradeIcon';
+import { VoiceAssistModal } from './components/VoiceAssistModal';
 import {
   Calendar,
   Sparkles,
@@ -59,7 +60,8 @@ import {
   ArrowUpDown,
   ArrowLeft,
   Wrench,
-  PlusCircle
+  PlusCircle,
+  Mic
 } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -89,6 +91,7 @@ export const App: React.FC = () => {
   const [isSimulatedContactOpen, setIsSimulatedContactOpen] = useState(false);
   const [authUser, setAuthUser] = useState<AuthUser | null>(getAuthUser);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isVoiceAssistOpen, setIsVoiceAssistOpen] = useState(false);
   const [liveAnnouncement, setLiveAnnouncement] = useState<string>('');
 
   const t = TRANSLATIONS[currentLanguage];
@@ -432,6 +435,7 @@ export const App: React.FC = () => {
         authUser={authUser}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
         onLogout={handleLogout}
+        onOpenVoiceAssist={() => setIsVoiceAssistOpen(true)}
       />
 
       {/* Navigation (Fixed Bottom Bar Only for all screens) */}
@@ -594,17 +598,27 @@ export const App: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t.searchPlaceholder}
-                  className="w-full pl-8 pr-7 py-2 text-xs bg-ivory-50 border border-sand-300 rounded-xl text-nearblack placeholder:text-nearblack-subtle focus:border-terracotta-500"
+                  className="w-full pl-8 pr-16 py-2 text-xs bg-ivory-50 border border-sand-300 rounded-xl text-nearblack placeholder:text-nearblack-subtle focus:border-terracotta-500"
                 />
-                {searchQuery && (
+                <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery('')}
+                      className="p-1 text-nearblack-subtle hover:text-nearblack"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  )}
                   <button
                     type="button"
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-nearblack-subtle hover:text-nearblack"
+                    onClick={() => setIsVoiceAssistOpen(true)}
+                    title={currentLanguage === 'hi' ? 'बोलकर खोजें' : currentLanguage === 'mr' ? 'बोलून शोधा' : 'Voice Search'}
+                    className="p-1 rounded-md bg-sand-200/90 hover:bg-sand-300 text-terracotta-600 transition-colors"
                   >
-                    <X className="w-3 h-3" />
+                    <Mic className="w-3.5 h-3.5" />
                   </button>
-                )}
+                </div>
               </div>
 
               <div className="flex items-center gap-1 shrink-0 bg-ivory-50 border border-sand-300 rounded-xl px-2.5 py-2 text-xs">
@@ -878,6 +892,43 @@ export const App: React.FC = () => {
           currentLanguage={currentLanguage}
         />
       )}
+
+      {/* 6. Voice Assist Modal (बोलकर खोजें / Voice Search Assist) */}
+      {isVoiceAssistOpen && (
+        <VoiceAssistModal
+          isOpen={isVoiceAssistOpen}
+          onClose={() => setIsVoiceAssistOpen(false)}
+          currentLanguage={currentLanguage}
+          onApplyVoiceCommand={(cmd) => {
+            if (cmd.tab) setActiveTab(cmd.tab);
+            if (cmd.tradeId) setSelectedTradeId(cmd.tradeId);
+            if (cmd.areaId) setSelectedAreaId(cmd.areaId);
+            if (cmd.dateFilter) setDateFilter(cmd.dateFilter);
+            if (cmd.searchQuery !== undefined) setSearchQuery(cmd.searchQuery);
+            setLiveAnnouncement(cmd.feedbackMessage);
+          }}
+        />
+      )}
+
+      {/* Floating Voice Assist Action Button for instant mobile access */}
+      <div className="fixed bottom-20 right-4 z-30 sm:bottom-6 no-print">
+        <button
+          type="button"
+          onClick={() => setIsVoiceAssistOpen(true)}
+          className="touch-target flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-navy-800 hover:bg-navy-900 text-white shadow-xl border-2 border-sand-300 group transition-transform active:scale-95"
+          aria-label="Voice Assist"
+          title={currentLanguage === 'hi' ? 'बोलकर काम खोजें' : currentLanguage === 'mr' ? 'बोलून काम शोधा' : 'Voice Assist'}
+        >
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-terracotta-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-terracotta-500"></span>
+          </span>
+          <Mic className="w-4 h-4 text-sand-300 group-hover:scale-110 transition-transform" />
+          <span className="text-xs font-bold font-hindi">
+            {currentLanguage === 'hi' ? 'बोलकर खोजें' : currentLanguage === 'mr' ? 'बोलून शोधा' : 'Voice Assist'}
+          </span>
+        </button>
+      </div>
     </div>
   );
 };

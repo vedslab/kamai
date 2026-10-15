@@ -1,5 +1,5 @@
 import React from 'react';
-import { Languages, Contact2, PlusCircle, LogIn, LogOut, UserCheck } from 'lucide-react';
+import { Languages, Contact2, PlusCircle, LogIn, LogOut, UserCheck, Mic } from 'lucide-react';
 import { Language, WorkerProfile, AuthUser } from '../types';
 import { TRANSLATIONS } from '../data/translations';
 import kamaiLogo from '../assets/karmik-logo-white.png';
@@ -13,6 +13,7 @@ interface HeaderProps {
   authUser: AuthUser | null;
   onOpenAuthModal: () => void;
   onLogout: () => void;
+  onOpenVoiceAssist: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -24,6 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
   authUser,
   onOpenAuthModal,
   onLogout,
+  onOpenVoiceAssist,
 }) => {
   const t = TRANSLATIONS[currentLanguage];
 
@@ -101,6 +103,20 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </div>
           )}
+
+          {/* Voice Assist (बोलकर खोजें) Button */}
+          <button
+            type="button"
+            onClick={onOpenVoiceAssist}
+            title={currentLanguage === 'hi' ? 'बोलकर खोजें (Voice Assist)' : currentLanguage === 'mr' ? 'बोलून शोधा (Voice Assist)' : 'Voice Assist'}
+            aria-label="Voice Assist"
+            className="touch-target px-2.5 py-1.5 rounded-lg bg-sand-100 hover:bg-sand-200 text-deepgreen-900 border border-sand-300 transition-colors flex items-center gap-1.5 text-xs font-bold"
+          >
+            <Mic className="w-4 h-4 text-terracotta-600 animate-pulse" />
+            <span className="hidden sm:inline font-hindi">
+              {currentLanguage === 'hi' ? 'बोलकर खोजें' : currentLanguage === 'mr' ? 'बोलून शोधा' : 'Voice'}
+            </span>
+          </button>
 
           {/* Language Switcher Button */}
           <button
