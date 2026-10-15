@@ -195,6 +195,7 @@ Mutual terms confirmed by worker and employer on KAMAI.`;
       chaiLunchProvided: lunchChai,
       safetyEquipmentAgreed: safetyAgreed,
       confirmedAt: new Date().toISOString(),
+      canExitUntil: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
       status: 'agreed',
       userAcknowledged: understoodTerms
     };
@@ -408,6 +409,27 @@ Mutual terms confirmed by worker and employer on KAMAI.`;
             <span className="font-semibold text-deepgreen-900 px-2 py-0.5 rounded bg-sand-200">
               {lunchChai ? t.lunchTeaIncluded : (currentLanguage === 'hi' ? 'कारीगर स्वयं लाएगा' : 'Worker brings own meal')}
             </span>
+          </div>
+
+          {/* 7. 1-Hour Safe Exit Policy Guarantee */}
+          <div className="p-3.5 rounded-xl border border-sand-300 bg-sand-100/80 space-y-1">
+            <span className="text-xs font-bold text-deepgreen-900 flex items-center gap-1.5">
+              <Clock className="w-4 h-4 text-terracotta-600" />
+              <span>
+                {currentLanguage === 'hi'
+                  ? '1 घंटे की सेफ एग्जिट गारंटी (Safe Exit Option)'
+                  : currentLanguage === 'mr'
+                  ? '१ तासाची सेफ एक्झिट गॅरंटी (Safe Exit Option)'
+                  : '1-Hour Safe Exit Guarantee'}
+              </span>
+            </span>
+            <p className="text-[11px] text-nearblack font-medium leading-relaxed">
+              {currentLanguage === 'hi'
+                ? 'यदि कार्यस्थल पर पहुंचने के बाद काम, सुरक्षा या तय मजदूरी में कोई गड़बड़ी पाई जाए, तो आप लॉकिंग के पहले 1 घंटे के भीतर बिना किसी नुकसान या जुर्माने के सुरक्षित काम छोड़ (Exit Job) सकते हैं।'
+                : currentLanguage === 'mr'
+                ? 'कामाच्या ठिकाणी पोहोचल्यावर मजुरी, सुरक्षा किंवा कामात तफावत आढळल्यास, लॉक केल्यानंतर पहिल्या १ तासाच्या आत आपण कोणत्याही दंडाशिवाय सुरक्षितपणे काम सोडू (Exit Job) शकता.'
+                : 'If wages, safety gear, or work scope differ on-site, you have an unconditional right to safely exit the job within 1 hour of locking without penalty.'}
+            </p>
           </div>
 
           {/* CRITICAL SIGNATURE INTERACTION: MANDATORY UNDERSTANDING CONFIRMATION CHECKBOX */}

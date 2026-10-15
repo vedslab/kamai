@@ -41,6 +41,7 @@ import { LanguageSelectorModal } from './components/LanguageSelectorModal';
 import { AuthModal } from './components/AuthModal';
 import { LandingPage } from './components/LandingPage';
 import { SunkeSamjhoButton } from './components/SunkeSamjhoButton';
+import { speakText } from './utils/speech';
 import { LocationCard } from './components/LocationCard';
 import { HomeQuickCards } from './components/HomeQuickCards';
 import { HomePromoBanners } from './components/HomePromoBanners';
@@ -48,6 +49,7 @@ import { HomeTrustAndReferral } from './components/HomeTrustAndReferral';
 import { WorkFiltersTab, TimeFilter, DateFilter } from './components/WorkFiltersTab';
 import { TradeIcon } from './components/TradeIcon';
 import { VoiceAssistModal } from './components/VoiceAssistModal';
+import { ExitJobModal } from './components/ExitJobModal';
 import {
   Calendar,
   Sparkles,
@@ -61,7 +63,10 @@ import {
   ArrowLeft,
   Wrench,
   PlusCircle,
-  Mic
+  Mic,
+  LogOut,
+  Clock,
+  AlertTriangle
 } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -92,6 +97,7 @@ export const App: React.FC = () => {
   const [authUser, setAuthUser] = useState<AuthUser | null>(getAuthUser);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isVoiceAssistOpen, setIsVoiceAssistOpen] = useState(false);
+  const [selectedAgreementForExit, setSelectedAgreementForExit] = useState<PreWorkAgreement | null>(null);
   const [liveAnnouncement, setLiveAnnouncement] = useState<string>('');
 
   const t = TRANSLATIONS[currentLanguage];
@@ -283,6 +289,36 @@ export const App: React.FC = () => {
     const updated = saveAgreement(agreement);
     setAgreements(updated);
     setActiveAgreement(agreement);
+  };
+
+  // Safe Exit Job within 1 hour
+  const handleConfirmExitJob = (agreementId: string, reason: string) => {
+    const updated = agreements.map((agr) => {
+      if (agr.id === agreementId) {
+        return {
+          ...agr,
+          status: 'exited' as const,
+          exitedAt: new Date().toISOString(),
+          exitReason: reason,
+        };
+      }
+      return agr;
+    });
+    setAgreements(updated);
+    try {
+      localStorage.setItem('kamai_pre_work_agreements', JSON.stringify(updated));
+    } catch {
+      // Ignore
+    }
+
+    const msg =
+      currentLanguage === 'hi'
+        ? 'काम से 1 घंटे के भीतर सुरक्षित एग्जिट दर्ज कर लिया गया है।'
+        : currentLanguage === 'mr'
+        ? 'काम १ तासाच्या आत सुरक्षितपणे सोडले गेले आहे.'
+        : 'Job successfully exited within 1-hour safe exit window.';
+    setLiveAnnouncement(msg);
+    speakText(msg, currentLanguage);
   };
 
   // STEP 3 → 4: Open Pehle Pakka with a specific job
@@ -742,48 +778,145 @@ export const App: React.FC = () => {
 
               {agreements.length > 0 ? (
                 <div className="space-y-3">
-                  {agreements.map((agr) => (
-                    <div
-                      key={agr.id}
-                      className="p-4 rounded-xl border border-sand-300 bg-ivory-50 shadow-warm-sm space-y-3"
-                    >
-                      <div className="flex items-center justify-between gap-2 border-b border-sand-200 pb-2">
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                          <span className="font-bold text-sm text-deepgreen-900">{agr.jobTitle}</span>
-                        </div>
-                        <span className="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
-                          {currentLanguage === 'hi' ? 'तय शर्तें' : 'Locked'}
-                        </span>
-                      </div>
+                  {agreements.map((agr) => {
+                    const confirmedTime = new Date(agr.confirmedAt).getTime();
+                    const timeElapsedMs = Date.now() - confirmedTime;
+                    const oneHourMs = 60 * 60 * 1000;
+                    const isWithin1Hour = timeElapsedMs <= oneHourMs;
+                    const minutesRemaining = Math.max(0, Math.ceil((oneHourMs - timeElapsedMs) / (60 * 1000)));
+                    const isExited = agr.status === 'exited';
 
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                        <div>
-                          <span className="text-nearblack-subtle block">तय मजदूरी:</span>
-                          <span className="font-bold text-terracotta-600 text-sm">
-                            ₹{agr.agreedWage} ({agr.wageBasis === 'per_day' ? 'Day' : agr.wageBasis === 'fixed_task' ? 'Task' : 'Hour'})
-                          </span>
+                    return (
+                      <div
+                        key={agr.id}
+                        className={`p-4 rounded-2xl border shadow-warm-sm space-y-3 transition-all ${
+                          isExited
+                            ? 'border-red-300 bg-red-50/40'
+                            : 'border-sand-300 bg-ivory-50'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-2 border-b border-sand-200 pb-2">
+                          <div className="flex items-center gap-2">
+                            {isExited ? (
+                              <LogOut className="w-4 h-4 text-red-600" />
+                            ) : (
+                              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                            )}
+                            <span className="font-bold text-sm text-deepgreen-900">{agr.jobTitle}</span>
+                          </div>
+                          <div>
+                            {isExited ? (
+                              <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 border border-red-200">
+                                🚫 {currentLanguage === 'hi' ? 'काम छोड़ा गया' : currentLanguage === 'mr' ? 'काम सोडले' : 'Exited'}
+                              </span>
+                            ) : (
+                              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                                🔒 {currentLanguage === 'hi' ? 'तय शर्तें' : 'Locked'}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                        <div>
-                          <span className="text-nearblack-subtle block">काम का समय:</span>
-                          <span className="font-semibold text-deepgreen-900">{agr.workingHours}</span>
-                        </div>
-                        <div>
-                          <span className="text-nearblack-subtle block">मालिक:</span>
-                          <span className="font-semibold text-deepgreen-900">{agr.employerName}</span>
-                        </div>
-                        <div>
-                          <span className="text-nearblack-subtle block">भुगतान:</span>
-                          <span className="font-semibold text-deepgreen-900">{agr.paymentTiming}</span>
-                        </div>
-                      </div>
 
-                      <div className="text-[11px] text-nearblack-subtle pt-1 border-t border-sand-200 flex items-center justify-between">
-                        <span>दर्ज तारीख: {new Date(agr.confirmedAt).toLocaleDateString('en-IN')}</span>
-                        <span className="text-deepgreen-800 font-medium">स्थान: {agr.location}</span>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                          <div>
+                            <span className="text-nearblack-subtle block">
+                              {currentLanguage === 'hi' ? 'तय मजदूरी:' : currentLanguage === 'mr' ? 'ठरलेली मजुरी:' : 'Agreed Wage:'}
+                            </span>
+                            <span className="font-bold text-terracotta-600 text-sm">
+                              ₹{agr.agreedWage} ({agr.wageBasis === 'per_day' ? 'Day' : agr.wageBasis === 'fixed_task' ? 'Task' : 'Hour'})
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-nearblack-subtle block">
+                              {currentLanguage === 'hi' ? 'काम का समय:' : currentLanguage === 'mr' ? 'कामाची वेळ:' : 'Hours:'}
+                            </span>
+                            <span className="font-semibold text-deepgreen-900">{agr.workingHours}</span>
+                          </div>
+                          <div>
+                            <span className="text-nearblack-subtle block">
+                              {currentLanguage === 'hi' ? 'मालिक:' : currentLanguage === 'mr' ? 'मालक:' : 'Employer:'}
+                            </span>
+                            <span className="font-semibold text-deepgreen-900">{agr.employerName}</span>
+                          </div>
+                          <div>
+                            <span className="text-nearblack-subtle block">
+                              {currentLanguage === 'hi' ? 'भुगतान:' : currentLanguage === 'mr' ? 'पेमेंट:' : 'Payment:'}
+                            </span>
+                            <span className="font-semibold text-deepgreen-900">{agr.paymentTiming}</span>
+                          </div>
+                        </div>
+
+                        {/* Display Exit Reason if exited within 1 hour */}
+                        {isExited && agr.exitReason && (
+                          <div className="p-2.5 rounded-xl bg-red-100/70 border border-red-200 text-xs text-red-900 space-y-1">
+                            <div className="flex items-center gap-1.5 font-bold">
+                              <AlertTriangle className="w-3.5 h-3.5 text-red-600" />
+                              <span>
+                                {currentLanguage === 'hi'
+                                  ? '1 घंटे के अंदर सुरक्षित एग्जिट का कारण:'
+                                  : currentLanguage === 'mr'
+                                  ? '१ तासात सुरक्षित एक्झिटचे कारण:'
+                                  : 'Safe Exit Reason (Within 1 hr):'}
+                              </span>
+                            </div>
+                            <p className="text-[11px] font-medium pl-5">{agr.exitReason}</p>
+                            {agr.exitedAt && (
+                              <span className="text-[10px] text-red-700 block pl-5">
+                                {new Date(agr.exitedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(agr.exitedAt).toLocaleDateString('en-IN')}
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Card Footer with 1-Hour Exit Action */}
+                        <div className="pt-2 border-t border-sand-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px]">
+                          <div className="text-nearblack-subtle flex items-center gap-2">
+                            <span>दर्ज तारीख: {new Date(agr.confirmedAt).toLocaleDateString('en-IN')}</span>
+                            <span>•</span>
+                            <span className="text-deepgreen-800 font-medium">स्थान: {agr.location}</span>
+                          </div>
+
+                          {!isExited && (
+                            <div className="flex items-center gap-2 self-end sm:self-auto">
+                              {isWithin1Hour ? (
+                                <>
+                                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 font-bold text-[11px] border border-amber-200">
+                                    <Clock className="w-3 h-3 text-amber-700" />
+                                    <span>
+                                      {currentLanguage === 'hi'
+                                        ? `सेफ एग्जिट: ${minutesRemaining} मि. शेष`
+                                        : currentLanguage === 'mr'
+                                        ? `सेफ एक्झिट: ${minutesRemaining} मि. शिल्लक`
+                                        : `Safe Exit: ${minutesRemaining}m left`}
+                                    </span>
+                                  </span>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => setSelectedAgreementForExit(agr)}
+                                    className="touch-target px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors"
+                                  >
+                                    <LogOut className="w-3.5 h-3.5" />
+                                    <span>
+                                      {currentLanguage === 'hi'
+                                        ? 'काम छोड़ें (Exit Job)'
+                                        : currentLanguage === 'mr'
+                                        ? 'काम सोडा (Exit Job)'
+                                        : 'Exit Job'}
+                                    </span>
+                                  </button>
+                                </>
+                              ) : (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-sand-200 text-nearblack-subtle text-[10px] font-semibold">
+                                  <span>🔒 1-घंटे की सेफ एग्जिट विंडो बंद</span>
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="p-6 text-center bg-ivory-50 rounded-xl border border-sand-300 space-y-2">
@@ -880,6 +1013,7 @@ export const App: React.FC = () => {
             setActiveTab('explore');
           }}
           currentLanguage={currentLanguage}
+          onOpenExitJob={(agr) => setSelectedAgreementForExit(agr)}
         />
       )}
 
@@ -907,6 +1041,17 @@ export const App: React.FC = () => {
             if (cmd.searchQuery !== undefined) setSearchQuery(cmd.searchQuery);
             setLiveAnnouncement(cmd.feedbackMessage);
           }}
+        />
+      )}
+
+      {/* 7. Safe Exit Job Modal (1-Hour Window) */}
+      {selectedAgreementForExit && (
+        <ExitJobModal
+          isOpen={!!selectedAgreementForExit}
+          onClose={() => setSelectedAgreementForExit(null)}
+          agreement={selectedAgreementForExit}
+          currentLanguage={currentLanguage}
+          onConfirmExit={handleConfirmExitJob}
         />
       )}
 

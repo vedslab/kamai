@@ -143,8 +143,11 @@ export interface PreWorkAgreement {
   chaiLunchProvided: boolean;
   safetyEquipmentAgreed: boolean;
   confirmedAt: string;
-  status: 'draft' | 'agreed';
+  status: 'draft' | 'agreed' | 'exited';
   userAcknowledged: boolean;
+  canExitUntil?: string;
+  exitedAt?: string;
+  exitReason?: string;
 }
 
 export interface InterestApplication {

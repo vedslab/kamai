@@ -12,7 +12,8 @@ import {
   AlertTriangle,
   ArrowLeft,
   User,
-  Clock
+  Clock,
+  LogOut
 } from 'lucide-react';
 import { Job, Language, WorkerProfile, PreWorkAgreement } from '../types';
 import { TRANSLATIONS } from '../data/translations';
@@ -27,6 +28,7 @@ interface SimulatedContactModalProps {
   onBackToPakka: () => void;
   onReturnToBrowse: () => void;
   currentLanguage: Language;
+  onOpenExitJob?: (agreement: PreWorkAgreement) => void;
 }
 
 export const SimulatedContactModal: React.FC<SimulatedContactModalProps> = ({
@@ -38,6 +40,7 @@ export const SimulatedContactModal: React.FC<SimulatedContactModalProps> = ({
   onBackToPakka,
   onReturnToBrowse,
   currentLanguage,
+  onOpenExitJob,
 }) => {
   const t = TRANSLATIONS[currentLanguage];
 
@@ -215,6 +218,35 @@ Terms confirmed via Pehle Pakka on KAMAI.`;
                 <span className="block text-[11px] text-nearblack-muted">{job.nakaPoint}</span>
               </div>
             </div>
+
+            {/* 1-Hour Safe Exit Window Action */}
+            {agreement && (
+              <div className="pt-2 border-t border-sand-200 flex items-center justify-between text-xs">
+                <span className="text-[11px] text-amber-800 font-bold flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>
+                    {currentLanguage === 'hi'
+                      ? '1 घंटे की सेफ एग्जिट विंडो खुली है'
+                      : currentLanguage === 'mr'
+                      ? '१ तासाची सेफ एक्झिट विंडो खुली आहे'
+                      : '1-Hour Safe Exit Window Active'}
+                  </span>
+                </span>
+                {onOpenExitJob && agreement.status === 'agreed' && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onOpenExitJob(agreement);
+                    }}
+                    className="touch-target px-2.5 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-bold flex items-center gap-1 transition-colors"
+                  >
+                    <LogOut className="w-3.5 h-3.5 text-red-600" />
+                    <span>{currentLanguage === 'hi' ? 'काम छोड़ें (Exit Job)' : currentLanguage === 'mr' ? 'काम सोडा (Exit Job)' : 'Exit Job'}</span>
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           {/* SIMULATED IN-APP CALL DIALOG */}
