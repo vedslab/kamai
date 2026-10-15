@@ -216,23 +216,32 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {/* Tag / Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-terracotta-500 text-ivory-50 shadow-warm-xs">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>KAMAI • कमाई</span>
-              <span className="w-1 h-1 rounded-full bg-ivory-50" />
-              <span className="text-sand-100">
-                {currentLanguage === 'hi' ? 'लेबर नाका डिजिटल मंच' : currentLanguage === 'mr' ? 'मजूर नाका डिजिटल व्यासपीठ' : 'Labour Naka Platform'}
+              <span>
+                {currentLanguage === 'hi' ? 'मुंबई लेबर नाका डिजिटल मंच' : currentLanguage === 'mr' ? 'मुंबई मजूर नाका डिजिटल व्यासपीठ' : 'Mumbai Labour Naka Platform'}
               </span>
             </div>
 
-            {/* Main Headline */}
+            {/* Main Brand Hero: KAMAI & Logo */}
             <div className="space-y-3">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-deepgreen-900 tracking-tight font-hindi leading-[1.15]">
-                {currentLanguage === 'hi'
-                  ? 'सीधा काम, तय दिहाड़ी — बिना किसी दलाल के'
-                  : currentLanguage === 'mr'
-                  ? 'थेट काम, ठरलेली मजुरी — दलालांशिवाय'
-                  : 'Direct Work, Fair Daily Wages — No Middlemen'}
-              </h1>
-              <p className="text-sm sm:text-base text-nearblack-subtle leading-relaxed max-w-xl font-medium">
+              <div className="flex items-center gap-3.5 sm:gap-4 pt-1">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl bg-white border-2 border-sand-300 shadow-warm-md p-2 flex items-center justify-center shrink-0">
+                  <img src={kamaiLogo} alt="KAMAI" className="w-full h-full object-contain" />
+                </div>
+                <div>
+                  <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-deepgreen-900 tracking-tight font-hindi leading-none">
+                    KAMAI <span className="text-terracotta-600 font-extrabold">| कमाई</span>
+                  </h1>
+                  <p className="text-xs sm:text-sm font-bold text-deepgreen-800 tracking-wider uppercase mt-1.5 sm:mt-2">
+                    {currentLanguage === 'hi'
+                      ? 'सीधा काम • तय दिहाड़ी'
+                      : currentLanguage === 'mr'
+                      ? 'थेट काम • ठरलेली मजुरी'
+                      : 'Direct Work • Fair Daily Wages'}
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-sm sm:text-base text-nearblack-subtle leading-relaxed max-w-xl font-medium pt-1">
                 {currentLanguage === 'hi'
                   ? 'मुंबई के लेबर नाकों से सीधे जुड़े ठेकेदारों और कामगारों का अपना भरोसेमंद मंच। सीधे मोबाइल नंबर से लॉगिन करें और सभी काम, पहचान कार्ड व तय दिहाड़ी देखें।'
                   : currentLanguage === 'mr'
