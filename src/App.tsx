@@ -5,7 +5,8 @@ import {
   Job,
   WorkerProfile,
   PreWorkAgreement,
-  SortOption
+  SortOption,
+  AuthUser
 } from './types';
 import { TRANSLATIONS } from './data/translations';
 import { TRADES } from './data/trades';
@@ -21,7 +22,10 @@ import {
   getAllJobs,
   addCustomJob,
   getAgreements,
-  saveAgreement
+  saveAgreement,
+  getAuthUser,
+  saveAuthUser,
+  clearAuthUser
 } from './utils/storage';
 import { Header } from './components/Header';
 import { Navigation } from './components/Navigation';
@@ -34,6 +38,7 @@ import { PehlePakkaModal } from './components/PehlePakkaModal';
 import { SimulatedContactModal } from './components/SimulatedContactModal';
 import { WelfareSection } from './components/WelfareSection';
 import { LanguageSelectorModal } from './components/LanguageSelectorModal';
+import { AuthModal } from './components/AuthModal';
 import { SunkeSamjhoButton } from './components/SunkeSamjhoButton';
 import { LocationCard } from './components/LocationCard';
 import { HomeQuickCards } from './components/HomeQuickCards';
@@ -79,6 +84,8 @@ export const App: React.FC = () => {
   const [activeAgreement, setActiveAgreement] = useState<PreWorkAgreement | null>(null);
   const [isPehlePakkaModalOpen, setIsPehlePakkaModalOpen] = useState(false);
   const [isSimulatedContactOpen, setIsSimulatedContactOpen] = useState(false);
+  const [authUser, setAuthUser] = useState<AuthUser | null>(getAuthUser);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [liveAnnouncement, setLiveAnnouncement] = useState<string>('');
 
   const t = TRANSLATIONS[currentLanguage];
@@ -137,6 +144,38 @@ export const App: React.FC = () => {
         : currentLanguage === 'mr'
         ? 'काम कार्ड हटवले'
         : 'Kaam Card deleted'
+    );
+  };
+
+  // Auth handlers (Phone + Demo OTP)
+  const handleLoginSuccess = (user: AuthUser) => {
+    saveAuthUser(user);
+    setAuthUser(user);
+    if (user.name && workerProfile && workerProfile.name === 'Mohan Lal Mistri') {
+      handleUpdateProfile({
+        ...workerProfile,
+        name: user.name,
+        phone: user.phone,
+      });
+    }
+    setLiveAnnouncement(
+      currentLanguage === 'hi'
+        ? 'सफलतापूर्वक लॉगिन हो गए'
+        : currentLanguage === 'mr'
+        ? 'यशस्वीरित्या लॉगिन झाले'
+        : 'Signed in successfully'
+    );
+  };
+
+  const handleLogout = () => {
+    clearAuthUser();
+    setAuthUser(null);
+    setLiveAnnouncement(
+      currentLanguage === 'hi'
+        ? 'लॉगआउट कर दिया गया'
+        : currentLanguage === 'mr'
+        ? 'लॉगआउट केले'
+        : 'Logged out successfully'
     );
   };
 
@@ -301,6 +340,9 @@ export const App: React.FC = () => {
           setSelectedTradeId(null);
           setActiveTab('home');
         }}
+        authUser={authUser}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        onLogout={handleLogout}
       />
 
       {/* Navigation (Fixed Bottom Bar Only for all screens) */}
@@ -754,6 +796,16 @@ export const App: React.FC = () => {
             setSelectedJobForPakka(null);
             setActiveTab('explore');
           }}
+          currentLanguage={currentLanguage}
+        />
+      )}
+
+      {/* 5. Phone & Demo OTP Login/Register Modal */}
+      {isAuthModalOpen && (
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+          onLoginSuccess={handleLoginSuccess}
           currentLanguage={currentLanguage}
         />
       )}

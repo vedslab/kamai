@@ -1,4 +1,4 @@
-import { Language, WorkerProfile, Job, PreWorkAgreement, InterestApplication } from '../types';
+import { Language, WorkerProfile, Job, PreWorkAgreement, InterestApplication, AuthUser } from '../types';
 import { INITIAL_MOCK_JOBS } from '../data/mockJobs';
 
 const STORAGE_KEYS = {
@@ -10,6 +10,7 @@ const STORAGE_KEYS = {
   INTEREST_APPLICATIONS: 'kamai_interest_apps',
   AVAILABLE_TODAY: 'kamai_available_today',
   RECENT_AREA: 'kamai_recent_area',
+  AUTH_USER: 'kamai_auth_user',
 };
 
 export const getSavedLanguage = (): Language => {
@@ -184,3 +185,32 @@ export const saveInterestApplication = (app: InterestApplication): InterestAppli
     return [app];
   }
 };
+
+export const getAuthUser = (): AuthUser | null => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEYS.AUTH_USER);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch {
+    // Ignore
+  }
+  return null;
+};
+
+export const saveAuthUser = (user: AuthUser): void => {
+  try {
+    localStorage.setItem(STORAGE_KEYS.AUTH_USER, JSON.stringify(user));
+  } catch {
+    // Ignore
+  }
+};
+
+export const clearAuthUser = (): void => {
+  try {
+    localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
+  } catch {
+    // Ignore
+  }
+};
+

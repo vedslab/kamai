@@ -1,6 +1,6 @@
 import React from 'react';
-import { Languages, Contact2, Sparkles, PlusCircle } from 'lucide-react';
-import { Language, WorkerProfile } from '../types';
+import { Languages, Contact2, PlusCircle, LogIn, LogOut, UserCheck } from 'lucide-react';
+import { Language, WorkerProfile, AuthUser } from '../types';
 import { TRANSLATIONS } from '../data/translations';
 import kamaiLogo from '../assets/karmik-logo-white.png';
 
@@ -10,6 +10,9 @@ interface HeaderProps {
   workerProfile: WorkerProfile | null;
   onNavigateToCard: () => void;
   onNavigateHome: () => void;
+  authUser: AuthUser | null;
+  onOpenAuthModal: () => void;
+  onLogout: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -18,6 +21,9 @@ export const Header: React.FC<HeaderProps> = ({
   workerProfile,
   onNavigateToCard,
   onNavigateHome,
+  authUser,
+  onOpenAuthModal,
+  onLogout,
 }) => {
   const t = TRANSLATIONS[currentLanguage];
 
@@ -65,7 +71,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Right Actions */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/* Quick Mera Kaam Card Button */}
+          {/* Quick Pehchaan Card Button */}
           <button
             type="button"
             onClick={onNavigateToCard}
@@ -85,6 +91,37 @@ export const Header: React.FC<HeaderProps> = ({
               </>
             )}
           </button>
+
+          {/* User Sign In / Signed In Profile Button */}
+          {authUser ? (
+            <div className="flex items-center gap-1 bg-emerald-50 border border-emerald-300 rounded-lg p-1 pl-2">
+              <div className="flex items-center gap-1 text-xs font-bold text-emerald-900">
+                <UserCheck className="w-3.5 h-3.5 text-emerald-700" />
+                <span className="hidden sm:inline max-w-[110px] truncate">
+                  {authUser.name || authUser.phone.slice(-4)}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={onLogout}
+                title={t.signOut}
+                aria-label={t.signOut}
+                className="touch-target p-1 rounded-md text-emerald-800 hover:text-red-700 hover:bg-emerald-100 transition-colors"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={onOpenAuthModal}
+              className="touch-target px-2.5 py-1.5 rounded-lg bg-deepgreen-800 hover:bg-deepgreen-900 text-ivory-50 transition-colors flex items-center gap-1.5 text-xs font-bold shadow-xs"
+              aria-label={t.signIn}
+            >
+              <LogIn className="w-3.5 h-3.5 text-sand-300" />
+              <span>{t.signIn}</span>
+            </button>
+          )}
 
           {/* Language Switcher Button */}
           <button

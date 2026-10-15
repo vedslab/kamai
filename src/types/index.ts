@@ -184,3 +184,9 @@ export interface WelfareResource {
     mr: string;
   };
 }
+
+export interface AuthUser {
+  phone: string;
+  name?: string;
+  registeredAt: string;
+}
