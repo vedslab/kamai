@@ -120,6 +120,8 @@ export interface WorkerProfile {
   hasSmartPhone: boolean;
   safetyTrained: boolean;
   hideContactOnPrint: boolean;
+  rating?: number;
+  ratingCount?: number;
   lastUpdated: string;
 }
 

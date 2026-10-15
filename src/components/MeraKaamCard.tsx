@@ -21,7 +21,8 @@ import {
   AlertTriangle,
   PlusCircle,
   IndianRupee,
-  HelpCircle
+  HelpCircle,
+  Star
 } from 'lucide-react';
 import { WorkerProfile, Language, Trade, ExperienceRange } from '../types';
 import { TRADES } from '../data/trades';
@@ -82,6 +83,19 @@ export const MeraKaamCard: React.FC<MeraKaamCardProps> = ({
   const [draftName, setDraftName] = useState<string>(profile ? profile.name : '');
   const [draftPhone, setDraftPhone] = useState<string>(profile ? profile.phone : '+91-98765-43210');
 
+  // Synchronize draft state when profile changes (e.g. on user login)
+  useEffect(() => {
+    if (profile) {
+      setDraftTradeId(profile.tradeId);
+      setDraftExpRange(profile.experienceRange || '2_to_5');
+      setDraftNaka(profile.preferredNaka);
+      setDraftHasTools(profile.hasOwnTools);
+      setDraftDailyRate(profile.dailyRateExpected);
+      setDraftName(profile.name);
+      setDraftPhone(profile.phone);
+    }
+  }, [profile]);
+
   const currentTrade = TRADES.find(tr => tr.id === (profile ? profile.tradeId : draftTradeId)) || TRADES[0];
 
   const openCreateWizard = () => {
@@ -104,8 +118,8 @@ export const MeraKaamCard: React.FC<MeraKaamCardProps> = ({
     else if (draftExpRange === 'more_than_10') years = 12;
 
     const updatedProfile: WorkerProfile = {
-      name: draftName.trim() || (currentLanguage === 'hi' ? 'कुशल कारीगर' : currentLanguage === 'mr' ? 'कुशल कारागीर' : 'Skilled Craftsman'),
-      phone: draftPhone.trim() || '+91-98765-43210',
+      name: draftName.trim() || profile?.name || (currentLanguage === 'hi' ? 'कुशल कारीगर' : currentLanguage === 'mr' ? 'कुशल कारागीर' : 'Skilled Craftsman'),
+      phone: draftPhone.trim() || profile?.phone || '+91-98765-43210',
       tradeId: draftTradeId,
       experienceRange: draftExpRange,
       experienceYears: years,
@@ -117,6 +131,8 @@ export const MeraKaamCard: React.FC<MeraKaamCardProps> = ({
       hasSmartPhone: true,
       safetyTrained: true,
       hideContactOnPrint,
+      rating: profile?.rating || 4.9,
+      ratingCount: profile?.ratingCount || 28,
       lastUpdated: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
     };
 
@@ -127,7 +143,7 @@ export const MeraKaamCard: React.FC<MeraKaamCardProps> = ({
   const handleShare = async () => {
     if (!profile) return;
     const tradeName = currentTrade.name[currentLanguage] || currentTrade.name.en;
-    const shareText = `*KAMAI Pehchaan Card*\n👤 ${profile.name}\n🛠️ ${tradeName}\n⏳ ${profile.experienceYears} ${t.yearsExp}\n📍 ${profile.preferredNaka}, Mumbai\n💰 ₹${profile.dailyRateExpected}/day`;
+    const shareText = `*KAMAI Pehchaan Card*\n👤 ${profile.name}\n⭐ ${profile.rating || 4.9} (${profile.ratingCount || 28} reviews)\n🛠️ ${tradeName}\n⏳ ${profile.experienceYears} ${t.yearsExp}\n📍 ${profile.preferredNaka}, Mumbai\n💰 ₹${profile.dailyRateExpected}/day`;
 
     if (navigator.share) {
       try {
@@ -269,26 +285,44 @@ export const MeraKaamCard: React.FC<MeraKaamCardProps> = ({
                 </div>
               </div>
 
-              {/* Pehchaan Badge */}
-              <div className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-sand-200 text-deepgreen-900 border border-sand-300">
-                <ShieldCheck className="w-3.5 h-3.5 text-terracotta-600" />
-                <span>{currentLanguage === 'hi' ? 'सत्यापित हुनर' : currentLanguage === 'mr' ? 'कौशल्य ओळख' : 'Skill Identity'}</span>
+              {/* Pehchaan & Rating Badges */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100/90 text-amber-900 border border-amber-300 shadow-xs">
+                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+                  <span>{profile.rating || 4.9} ★</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-sand-200 text-deepgreen-900 border border-sand-300">
+                  <ShieldCheck className="w-3.5 h-3.5 text-deepgreen-800" />
+                  <span>{currentLanguage === 'hi' ? 'सत्यापित हुनर' : currentLanguage === 'mr' ? 'कौशल्य ओळख' : 'Skill Identity'}</span>
+                </div>
               </div>
             </div>
 
-            {/* Card Body: Worker Name, Skill, Experience Level */}
+            {/* Card Body: Worker Name, Rating, Skill, Experience Level */}
             <div className="py-5 grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
-              <div className="sm:col-span-2 space-y-1.5">
+              <div className="sm:col-span-2 space-y-2">
                 <span className="text-[11px] font-semibold uppercase tracking-wider text-nearblack-subtle">
                   {t.workerName}
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-deepgreen-900 tracking-tight font-hindi">
-                  {profile.name}
-                </h3>
+
+                <div className="flex items-center gap-3 flex-wrap">
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-deepgreen-900 tracking-tight font-hindi">
+                    {profile.name}
+                  </h3>
+
+                  {/* USER RATING BADGE */}
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 shadow-warm-xs">
+                    <Star className="w-4 h-4 fill-amber-400 text-amber-500" />
+                    <span className="font-extrabold text-sm sm:text-base">{profile.rating || 4.9}</span>
+                    <span className="text-xs text-amber-800 font-semibold">
+                      ({profile.ratingCount || 28} {currentLanguage === 'hi' ? 'समीक्षाएं' : currentLanguage === 'mr' ? 'अभिप्राय' : 'reviews'})
+                    </span>
+                  </div>
+                </div>
 
                 {/* Skill & Experience Level Badges */}
                 <div className="pt-1 flex items-center gap-2 flex-wrap">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-terracotta-50 text-terracotta-700 border border-terracotta-500/40 text-sm font-bold">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-sand-200 text-deepgreen-900 border border-sand-300 text-sm font-bold">
                     <TradeIcon iconName={currentTrade.iconName} className="w-4 h-4" />
                     <span>{currentTrade.name[currentLanguage] || currentTrade.name.en}</span>
                   </span>
@@ -296,6 +330,11 @@ export const MeraKaamCard: React.FC<MeraKaamCardProps> = ({
                   <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg bg-sand-200 text-deepgreen-900 border border-sand-300">
                     <Clock className="w-3.5 h-3.5 text-deepgreen-800" />
                     <span>{getExpRangeLabel(profile.experienceRange || '2_to_5')}</span>
+                  </span>
+
+                  <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-300">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>100% {currentLanguage === 'hi' ? 'समय पर तय काम' : currentLanguage === 'mr' ? 'वेळेवर काम' : 'On-Time Verified'}</span>
                   </span>
                 </div>
               </div>
@@ -305,10 +344,10 @@ export const MeraKaamCard: React.FC<MeraKaamCardProps> = ({
                 <span className="text-[10px] font-bold uppercase tracking-wider text-nearblack-subtle block">
                   {t.dailyRate}
                 </span>
-                <span className="text-2xl sm:text-3xl font-extrabold text-terracotta-600 block">
+                <span className="text-2xl sm:text-3xl font-extrabold text-deepgreen-900 block">
                   ₹{profile.dailyRateExpected}
                 </span>
-                <span className="text-[10px] font-medium text-deepgreen-900 block">
+                <span className="text-[10px] font-medium text-deepgreen-800 block">
                   {currentLanguage === 'hi' ? 'मानक तय दर' : currentLanguage === 'mr' ? 'मानक ठरलेला दर' : 'Standard Expected Rate'}
                 </span>
               </div>

@@ -91,11 +91,25 @@ export const App: React.FC = () => {
 
   const t = TRANSLATIONS[currentLanguage];
 
-  // Effective profile fallback when card hasn't been created yet
+  // Effective profile fallback with user login name and rating
   const effectiveProfile: WorkerProfile = useMemo(() => {
-    return workerProfile || {
-      name: currentLanguage === 'hi' ? 'कुशल कारीगर' : currentLanguage === 'mr' ? 'कुशल कारागीर' : 'Skilled Craftsman',
-      phone: '+91-98765-43210',
+    const currentName = authUser?.name || workerProfile?.name || (currentLanguage === 'hi' ? 'कुशल कारीगर' : currentLanguage === 'mr' ? 'कुशल कारागीर' : 'Skilled Craftsman');
+    const currentPhone = authUser?.phone || workerProfile?.phone || '+91-98765-43210';
+    const rating = workerProfile?.rating ?? 4.9;
+    const ratingCount = workerProfile?.ratingCount ?? 28;
+
+    if (workerProfile) {
+      return {
+        ...workerProfile,
+        name: authUser?.name || workerProfile.name,
+        phone: authUser?.phone || workerProfile.phone,
+        rating,
+        ratingCount,
+      };
+    }
+    return {
+      name: currentName,
+      phone: currentPhone,
       tradeId: 'plumber',
       experienceRange: '2_to_5',
       experienceYears: 4,
@@ -107,9 +121,11 @@ export const App: React.FC = () => {
       hasSmartPhone: true,
       safetyTrained: true,
       hideContactOnPrint: true,
+      rating,
+      ratingCount,
       lastUpdated: new Date().toLocaleDateString('en-IN')
     };
-  }, [workerProfile, currentLanguage]);
+  }, [workerProfile, authUser, currentLanguage]);
 
   // Helper for current selected trade
   const activeTrade = useMemo(() => {
@@ -161,13 +177,36 @@ export const App: React.FC = () => {
     setSearchQuery('');
     setOnlySaved(false);
     window.scrollTo({ top: 0, behavior: 'instant' });
-    if (user.name && workerProfile && workerProfile.name === 'Mohan Lal Mistri') {
-      handleUpdateProfile({
-        ...workerProfile,
+
+    // The name user logs in with MUST reflect in pehchaan card!
+    if (user.name) {
+      const base = workerProfile || {
         name: user.name,
         phone: user.phone,
+        tradeId: 'plumber',
+        experienceRange: '2_to_5' as const,
+        experienceYears: 4,
+        city: 'Mumbai',
+        preferredNaka: 'Dadar Kabutar Khana Naka',
+        dailyRateExpected: 950,
+        availableToday: false,
+        hasOwnTools: true,
+        hasSmartPhone: true,
+        safetyTrained: true,
+        hideContactOnPrint: true,
+        rating: 4.9,
+        ratingCount: 28,
+        lastUpdated: new Date().toLocaleDateString('en-IN')
+      };
+      handleUpdateProfile({
+        ...base,
+        name: user.name,
+        phone: user.phone,
+        rating: base.rating ?? 4.9,
+        ratingCount: base.ratingCount ?? 28,
       });
     }
+
     setLiveAnnouncement(
       currentLanguage === 'hi'
         ? 'सफलतापूर्वक लॉगिन हो गए। होम पेज पर आपका स्वागत है।'
@@ -627,7 +666,7 @@ export const App: React.FC = () => {
         {/* VIEW 3: MERA KAAM CARD (Digital Skill Identity) */}
         {activeTab === 'mycard' && (
           <MeraKaamCard
-            profile={workerProfile}
+            profile={effectiveProfile}
             onUpdateProfile={handleUpdateProfile}
             onDeleteProfile={handleDeleteProfile}
             currentLanguage={currentLanguage}
