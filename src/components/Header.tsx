@@ -92,39 +92,14 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </button>
 
-          {/* User Sign In / Signed In Profile & Prominent Log Out Button */}
-          {authUser ? (
-            <div className="flex items-center gap-1.5">
-              {/* User Info Badge */}
-              <div className="hidden xs:flex items-center gap-1.5 bg-emerald-50 border border-emerald-300 rounded-lg px-2 py-1.5 text-xs font-bold text-emerald-900">
-                <UserCheck className="w-3.5 h-3.5 text-emerald-700" />
-                <span className="max-w-[100px] truncate">
-                  {authUser.name || authUser.phone.slice(-4)}
-                </span>
-              </div>
-
-              {/* Prominent Log Out Button On Top */}
-              <button
-                type="button"
-                onClick={onLogout}
-                title={t.signOut}
-                aria-label={t.signOut}
-                className="touch-target px-2.5 sm:px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 border border-red-300 font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors"
-              >
-                <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600" />
-                <span className="font-hindi">{currentLanguage === 'hi' ? 'लॉगआउट' : currentLanguage === 'mr' ? 'लॉगआउट' : 'Log Out'}</span>
-              </button>
+          {/* User Info Badge (when signed in) */}
+          {authUser && (
+            <div className="hidden xs:flex items-center gap-1.5 bg-sand-100 border border-sand-300 rounded-lg px-2 py-1.5 text-xs font-bold text-deepgreen-900">
+              <UserCheck className="w-3.5 h-3.5 text-deepgreen-800" />
+              <span className="max-w-[100px] truncate">
+                {authUser.name || authUser.phone.slice(-4)}
+              </span>
             </div>
-          ) : (
-            <button
-              type="button"
-              onClick={onOpenAuthModal}
-              className="touch-target px-2.5 py-1.5 rounded-lg bg-deepgreen-800 hover:bg-deepgreen-900 text-ivory-50 transition-colors flex items-center gap-1.5 text-xs font-bold shadow-xs"
-              aria-label={t.signIn}
-            >
-              <LogIn className="w-3.5 h-3.5 text-sand-300" />
-              <span>{t.signIn}</span>
-            </button>
           )}
 
           {/* Language Switcher Button */}
@@ -137,6 +112,30 @@ export const Header: React.FC<HeaderProps> = ({
             <Languages className="w-4 h-4 text-deepgreen-800" />
             <span>{getLangBadge()}</span>
           </button>
+
+          {/* Log Out Button (on the RIGHT of Language selection) */}
+          {authUser ? (
+            <button
+              type="button"
+              onClick={onLogout}
+              title={t.signOut}
+              aria-label={t.signOut}
+              className="touch-target px-2.5 sm:px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 border border-red-300 font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors"
+            >
+              <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600" />
+              <span className="font-hindi">{currentLanguage === 'hi' ? 'लॉगआउट' : currentLanguage === 'mr' ? 'लॉगआउट' : 'Log Out'}</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={onOpenAuthModal}
+              className="touch-target px-2.5 py-1.5 rounded-lg bg-deepgreen-800 hover:bg-deepgreen-900 text-ivory-50 transition-colors flex items-center gap-1.5 text-xs font-bold shadow-xs"
+              aria-label={t.signIn}
+            >
+              <LogIn className="w-3.5 h-3.5 text-sand-300" />
+              <span>{t.signIn}</span>
+            </button>
+          )}
         </div>
       </div>
     </header>
