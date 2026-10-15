@@ -4,11 +4,12 @@
 
 @layer base {
   :root {
-    --color-ivory: #F7F3EA;
-    --color-terracotta: #D65A31;
-    --color-deepgreen: #253C34;
-    --color-sand: #E5CFA2;
-    --color-nearblack: #1F2925;
+    --color-ivory: #FAF6F0;
+    --color-canvas: #FFFBF8;
+    --color-navy: #1A2D57;
+    --color-sand: #D9C0A2;
+    --color-cream: #EADBC8;
+    --color-nearblack: #121E36;
   }
 
   html {
@@ -18,8 +19,8 @@
   }
 
   body {
-    background-color: #F7F3EA;
-    color: #1F2925;
+    background-color: #FAF6F0;
+    color: #121E36;
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -27,7 +28,7 @@
 
   /* Accessible focus rings */
   :focus-visible {
-    outline: 3px solid #D65A31;
+    outline: 3px solid #1A2D57;
     outline-offset: 2px;
   }
 }

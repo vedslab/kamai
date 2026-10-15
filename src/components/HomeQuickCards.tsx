@@ -22,21 +22,21 @@ export const HomeQuickCards: React.FC<HomeQuickCardsProps> = ({
       <button
         type="button"
         onClick={onExploreClick}
-        className="p-4 sm:p-5 rounded-2xl bg-ivory-50 border-2 border-sand-300 hover:border-terracotta-500 shadow-warm-xs hover:shadow-warm text-left flex flex-col justify-between gap-3 group transition-all touch-target"
+        className="p-4 sm:p-5 rounded-2xl bg-ivory-50 border-2 border-sand-300 hover:border-navy-600 shadow-warm-xs hover:shadow-warm text-left flex flex-col justify-between gap-3 group transition-all touch-target"
       >
         <div className="flex items-center justify-between">
-          <div className="w-10 h-10 rounded-xl bg-terracotta-500/15 border border-terracotta-300 text-terracotta-700 flex items-center justify-center group-hover:scale-105 transition-transform">
-            <Briefcase className="w-5 h-5 text-terracotta-600" />
+          <div className="w-10 h-10 rounded-xl bg-sand-200 border border-sand-400 text-navy-900 flex items-center justify-center group-hover:scale-105 transition-transform">
+            <Briefcase className="w-5 h-5 text-navy-800" />
           </div>
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sand-200 text-deepgreen-900 border border-sand-300">
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sand-200 text-navy-900 border border-sand-300">
             {jobCount} {currentLanguage === 'hi' ? 'कामे' : currentLanguage === 'mr' ? 'कामे' : 'Jobs'}
           </span>
         </div>
 
         <div>
-          <h3 className="font-extrabold text-sm sm:text-base text-deepgreen-900 group-hover:text-terracotta-700 flex items-center gap-1 transition-colors font-hindi">
+          <h3 className="font-extrabold text-sm sm:text-base text-navy-900 group-hover:text-navy-700 flex items-center gap-1 transition-colors font-hindi">
             <span>{currentLanguage === 'hi' ? 'काम खोजें' : currentLanguage === 'mr' ? 'काम शोधा' : 'Explore Work'}</span>
-            <ArrowRight className="w-4 h-4 text-terracotta-500 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-4 h-4 text-sand-500 group-hover:translate-x-1 transition-transform" />
           </h3>
           <p className="text-[11px] text-nearblack-subtle mt-0.5">
             {currentLanguage === 'hi' ? 'तय दिहाड़ी व सीधा संपर्क' : currentLanguage === 'mr' ? 'ठरलेली मजुरी आणि थेट संपर्क' : 'Fair daily wages & instant hiring'}

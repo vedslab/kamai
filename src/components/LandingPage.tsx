@@ -214,8 +214,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           {/* LEFT COLUMN: Brand Presentation, Pillars & Trades */}
           <div className="lg:col-span-7 space-y-6">
             {/* Tag / Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-terracotta-500 text-ivory-50 shadow-warm-xs">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-navy-800 text-ivory-50 shadow-warm-xs">
+              <Sparkles className="w-3.5 h-3.5 text-sand-300" />
               <span>
                 {currentLanguage === 'hi' ? 'मुंबई लेबर नाका डिजिटल मंच' : currentLanguage === 'mr' ? 'मुंबई मजूर नाका डिजिटल व्यासपीठ' : 'Mumbai Labour Naka Platform'}
               </span>
@@ -228,10 +228,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   <img src={kamaiLogo} alt="KAMAI" className="w-full h-full object-contain" />
                 </div>
                 <div>
-                  <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-deepgreen-900 tracking-tight font-hindi leading-none">
-                    KAMAI <span className="text-terracotta-600 font-extrabold">| कमाई</span>
+                  <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-navy-900 tracking-tight font-hindi leading-none">
+                    KAMAI <span className="text-sand-600 font-extrabold">| कमाई</span>
                   </h1>
-                  <p className="text-xs sm:text-sm font-bold text-deepgreen-800 tracking-wider uppercase mt-1.5 sm:mt-2">
+                  <p className="text-xs sm:text-sm font-bold text-navy-800 tracking-wider uppercase mt-1.5 sm:mt-2">
                     {currentLanguage === 'hi'
                       ? 'सीधा काम • तय दिहाड़ी'
                       : currentLanguage === 'mr'
@@ -253,11 +253,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {/* 4 Value Pillars */}
             <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 pt-2">
               <div className="p-3.5 rounded-xl bg-white border border-sand-300 shadow-warm-xs flex items-start gap-3">
-                <div className="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
-                  <ShieldCheck className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-lg bg-navy-100 text-navy-800 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-5 h-5 text-navy-800" />
                 </div>
                 <div>
-                  <h4 className="font-extrabold text-xs sm:text-sm text-deepgreen-900 font-hindi">
+                  <h4 className="font-extrabold text-xs sm:text-sm text-navy-900 font-hindi">
                     {currentLanguage === 'hi' ? '100% तय दिहाड़ी' : currentLanguage === 'mr' ? '१००% ठरलेली मजुरी' : 'Locked Wages'}
                   </h4>
                   <p className="text-[11px] text-nearblack-subtle mt-0.5">
@@ -267,11 +267,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
 
               <div className="p-3.5 rounded-xl bg-white border border-sand-300 shadow-warm-xs flex items-start gap-3">
-                <div className="w-9 h-9 rounded-lg bg-sand-200 text-deepgreen-900 flex items-center justify-center shrink-0">
-                  <Users className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-lg bg-sand-200 text-navy-900 flex items-center justify-center shrink-0">
+                  <Users className="w-5 h-5 text-navy-900" />
                 </div>
                 <div>
-                  <h4 className="font-extrabold text-xs sm:text-sm text-deepgreen-900 font-hindi">
+                  <h4 className="font-extrabold text-xs sm:text-sm text-navy-900 font-hindi">
                     {currentLanguage === 'hi' ? 'सीधा संपर्क' : currentLanguage === 'mr' ? 'थेट संपर्क' : 'Direct Calling'}
                   </h4>
                   <p className="text-[11px] text-nearblack-subtle mt-0.5">
@@ -281,11 +281,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
 
               <div className="p-3.5 rounded-xl bg-white border border-sand-300 shadow-warm-xs flex items-start gap-3">
-                <div className="w-9 h-9 rounded-lg bg-terracotta-100 text-terracotta-700 flex items-center justify-center shrink-0">
-                  <Award className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-lg bg-sand-300 text-navy-900 flex items-center justify-center shrink-0">
+                  <Award className="w-5 h-5 text-navy-900" />
                 </div>
                 <div>
-                  <h4 className="font-extrabold text-xs sm:text-sm text-deepgreen-900 font-hindi">
+                  <h4 className="font-extrabold text-xs sm:text-sm text-navy-900 font-hindi">
                     {currentLanguage === 'hi' ? 'पहचान कार्ड' : currentLanguage === 'mr' ? 'ओळखपत्र' : 'Pehchaan Card'}
                   </h4>
                   <p className="text-[11px] text-nearblack-subtle mt-0.5">
@@ -295,8 +295,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
 
               <div className="p-3.5 rounded-xl bg-white border border-sand-300 shadow-warm-xs flex items-start gap-3">
-                <div className="w-9 h-9 rounded-lg bg-sand-200 text-deepgreen-900 flex items-center justify-center shrink-0">
-                  <HardHat className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-lg bg-sand-200 text-navy-900 flex items-center justify-center shrink-0">
+                  <HardHat className="w-5 h-5 text-navy-900" />
                 </div>
                 <div>
                   <h4 className="font-extrabold text-xs sm:text-sm text-deepgreen-900 font-hindi">

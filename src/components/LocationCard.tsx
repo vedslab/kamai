@@ -47,11 +47,11 @@ export const LocationCard: React.FC<LocationCardProps> = ({
         {/* Subtle Map Graphic Background (Grayscale map roads like reference app) */}
         <div className="absolute inset-0 opacity-20 pointer-events-none" aria-hidden="true">
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 400 120">
-            <path d="M-20,40 Q80,20 180,60 T380,30 T440,70" fill="none" stroke="#253C34" strokeWidth="6" />
-            <path d="M40,-10 L80,130 M220,-10 L190,130 M310,-10 L340,130" fill="none" stroke="#253C34" strokeWidth="4" />
-            <path d="M-10,90 Q120,80 250,110 T420,95" fill="none" stroke="#253C34" strokeWidth="3" strokeDasharray="6 3" />
-            <circle cx="180" cy="60" r="14" fill="#D65A31" fillOpacity="0.25" />
-            <circle cx="180" cy="60" r="6" fill="#D65A31" />
+            <path d="M-20,40 Q80,20 180,60 T380,30 T440,70" fill="none" stroke="#1A2D57" strokeWidth="6" />
+            <path d="M40,-10 L80,130 M220,-10 L190,130 M310,-10 L340,130" fill="none" stroke="#1A2D57" strokeWidth="4" />
+            <path d="M-10,90 Q120,80 250,110 T420,95" fill="none" stroke="#1A2D57" strokeWidth="3" strokeDasharray="6 3" />
+            <circle cx="180" cy="60" r="14" fill="#D9C0A2" fillOpacity="0.4" />
+            <circle cx="180" cy="60" r="6" fill="#1A2D57" />
           </svg>
         </div>
 
