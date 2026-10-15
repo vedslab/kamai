@@ -39,6 +39,7 @@ import { SimulatedContactModal } from './components/SimulatedContactModal';
 import { WelfareSection } from './components/WelfareSection';
 import { LanguageSelectorModal } from './components/LanguageSelectorModal';
 import { AuthModal } from './components/AuthModal';
+import { LandingPage } from './components/LandingPage';
 import { SunkeSamjhoButton } from './components/SunkeSamjhoButton';
 import { LocationCard } from './components/LocationCard';
 import { HomeQuickCards } from './components/HomeQuickCards';
@@ -323,6 +324,37 @@ export const App: React.FC = () => {
     }
   };
 
+  // UN-AUTHENTICATED STATE: Separate Landing & Login Gateway Page
+  // The user only enters the main website and sees all pages after logging in.
+  if (!authUser) {
+    return (
+      <div className="min-h-screen bg-ivory-100 flex flex-col text-nearblack font-sans">
+        {/* Screen-Reader Live Region for dynamic announcements */}
+        <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+          {liveAnnouncement}
+        </div>
+
+        {/* Dedicated Landing / Welcome Gateway with Phone & Dummy OTP Sign In */}
+        <LandingPage
+          currentLanguage={currentLanguage}
+          onOpenLanguageModal={() => setIsLanguageModalOpen(true)}
+          onLoginSuccess={handleLoginSuccess}
+        />
+
+        {/* Language Selector Modal */}
+        {isLanguageModalOpen && (
+          <LanguageSelectorModal
+            isOpen={isLanguageModalOpen}
+            onClose={() => setIsLanguageModalOpen(false)}
+            currentLanguage={currentLanguage}
+            onSelectLanguage={handleSelectLanguage}
+          />
+        )}
+      </div>
+    );
+  }
+
+  // AUTHENTICATED STATE: Full Website Inside (all pages, bottom navigation, top logout button)
   return (
     <div className="min-h-screen bg-ivory-100 flex flex-col text-nearblack font-sans pb-28">
       {/* Screen-Reader Live Region for dynamic announcements */}

@@ -92,23 +92,27 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </button>
 
-          {/* User Sign In / Signed In Profile Button */}
+          {/* User Sign In / Signed In Profile & Prominent Log Out Button */}
           {authUser ? (
-            <div className="flex items-center gap-1 bg-emerald-50 border border-emerald-300 rounded-lg p-1 pl-2">
-              <div className="flex items-center gap-1 text-xs font-bold text-emerald-900">
+            <div className="flex items-center gap-1.5">
+              {/* User Info Badge */}
+              <div className="hidden xs:flex items-center gap-1.5 bg-emerald-50 border border-emerald-300 rounded-lg px-2 py-1.5 text-xs font-bold text-emerald-900">
                 <UserCheck className="w-3.5 h-3.5 text-emerald-700" />
-                <span className="hidden sm:inline max-w-[110px] truncate">
+                <span className="max-w-[100px] truncate">
                   {authUser.name || authUser.phone.slice(-4)}
                 </span>
               </div>
+
+              {/* Prominent Log Out Button On Top */}
               <button
                 type="button"
                 onClick={onLogout}
                 title={t.signOut}
                 aria-label={t.signOut}
-                className="touch-target p-1 rounded-md text-emerald-800 hover:text-red-700 hover:bg-emerald-100 transition-colors"
+                className="touch-target px-2.5 sm:px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 border border-red-300 font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors"
               >
-                <LogOut className="w-3.5 h-3.5" />
+                <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600" />
+                <span className="font-hindi">{currentLanguage === 'hi' ? 'लॉगआउट' : currentLanguage === 'mr' ? 'लॉगआउट' : 'Log Out'}</span>
               </button>
             </div>
           ) : (
