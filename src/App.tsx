@@ -409,48 +409,7 @@ export const App: React.FC = () => {
               currentLanguage={currentLanguage}
             />
 
-            {/* CARD 3: FILTERS CARD (Selecting any filter redirects to Work page) */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between px-1">
-                <span className="text-xs font-bold uppercase tracking-wider text-nearblack-subtle">
-                  {currentLanguage === 'hi' ? 'फिल्टर कार्ड (काम खोजें)' : currentLanguage === 'mr' ? 'फिल्टर कार्ड (काम शोधा)' : 'Filter Work'}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('work')}
-                  className="text-xs font-bold text-terracotta-600 hover:text-terracotta-700 flex items-center gap-1"
-                >
-                  <span>{currentLanguage === 'hi' ? 'सभी काम देखें >' : currentLanguage === 'mr' ? 'सर्व कामे पहा >' : 'View all jobs >'}</span>
-                </button>
-              </div>
-
-              <WorkFiltersTab
-                dateFilter={dateFilter}
-                onDateChange={(val) => {
-                  setDateFilter(val);
-                  setActiveTab('work');
-                }}
-                timeFilter={timeFilter}
-                onTimeChange={(val) => {
-                  setTimeFilter(val);
-                  setActiveTab('work');
-                }}
-                selectedAreaId={selectedAreaId}
-                onAreaChange={(val) => {
-                  setSelectedAreaId(val);
-                  setActiveTab('work');
-                }}
-                selectedTradeId={selectedTradeId}
-                onTradeChange={(val) => {
-                  setSelectedTradeId(val);
-                  setActiveTab('work');
-                }}
-                currentLanguage={currentLanguage}
-                totalFilteredCount={filteredJobs.length}
-              />
-            </div>
-
-            {/* CARD 4: VARIOUS JOB PROFILES (From Trades Page) */}
+            {/* VARIOUS JOB PROFILES (From Trades Page) */}
             <div className="space-y-3 pt-1">
               <div className="flex items-center justify-between px-1">
                 <div>
