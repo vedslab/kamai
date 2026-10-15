@@ -152,6 +152,15 @@ export const App: React.FC = () => {
   const handleLoginSuccess = (user: AuthUser) => {
     saveAuthUser(user);
     setAuthUser(user);
+    // User should ALWAYS land on Home page when logging in
+    setActiveTab('home');
+    setSelectedTradeId(null);
+    setSelectedAreaId(null);
+    setDateFilter('all');
+    setTimeFilter('all');
+    setSearchQuery('');
+    setOnlySaved(false);
+    window.scrollTo({ top: 0, behavior: 'instant' });
     if (user.name && workerProfile && workerProfile.name === 'Mohan Lal Mistri') {
       handleUpdateProfile({
         ...workerProfile,
@@ -161,16 +170,23 @@ export const App: React.FC = () => {
     }
     setLiveAnnouncement(
       currentLanguage === 'hi'
-        ? 'सफलतापूर्वक लॉगिन हो गए'
+        ? 'सफलतापूर्वक लॉगिन हो गए। होम पेज पर आपका स्वागत है।'
         : currentLanguage === 'mr'
-        ? 'यशस्वीरित्या लॉगिन झाले'
-        : 'Signed in successfully'
+        ? 'यशस्वीरित्या लॉगिन झाले. मुख्य पानावर आपले स्वागत आहे.'
+        : 'Signed in successfully. Welcome to Home.'
     );
   };
 
   const handleLogout = () => {
     clearAuthUser();
     setAuthUser(null);
+    setActiveTab('home');
+    setSelectedTradeId(null);
+    setSelectedAreaId(null);
+    setDateFilter('all');
+    setTimeFilter('all');
+    setSearchQuery('');
+    setOnlySaved(false);
     setLiveAnnouncement(
       currentLanguage === 'hi'
         ? 'लॉगआउट कर दिया गया'
