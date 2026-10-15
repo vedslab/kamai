@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-ivory: #F7F3EA;
+    --color-terracotta: #D65A31;
+    --color-deepgreen: #253C34;
+    --color-sand: #E5CFA2;
+    --color-nearblack: #1F2925;
+  }
+
+  html {
+    font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', system-ui, -apple-system, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #F7F3EA;
+    color: #1F2925;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+
+  /* Accessible focus rings */
+  :focus-visible {
+    outline: 3px solid #D65A31;
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  /* Minimum 44x44px touch target guarantee */
+  .touch-target {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Minimum 48x48px touch target guarantee for primary worker actions */
+  .touch-target-primary {
+    min-width: 48px;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* High contrast border */
+  .border-editorial {
+    border: 1px solid rgba(31, 41, 37, 0.15);
+  }
+
+  .border-editorial-strong {
+    border: 1.5px solid rgba(31, 41, 37, 0.25);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print styling for Mera Kaam Card */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}
